@@ -477,7 +477,14 @@ function renderRM() {
   var PAD = { t: 16, r: 18, b: 46, l: 60 };
   svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
   var vp = (selYear ? pr.filter(function(p) { return !rmH[p.b] && isOnSale(p, selYear); }) : pr.filter(function(p) { return !rmH[p.b]; })).map(function(p) { return p.p; });
-  var pMax = (vp.length ? Math.max.apply(null, vp) : 7000) * 1.18, xMin = 2020.8, xMax = 2026.85;
+  var pMax = (vp.length ? Math.max.apply(null, vp) : 7000) * 1.18, xMin = 2020.8;
+  /* X 轴右边界：动态取产品最大年份 + 0.6，至少到 2026.85 */
+  var xMaxRaw = pr.length ? Math.max.apply(null, pr.map(function(p) { return p.y; })) : 2026;
+  var xMax = Math.max(2026.85, Math.ceil(xMaxRaw) + 0.6);
+  /* 年份刻度：从 2021 到 xMax 上取整 */
+  var yrEnd = Math.ceil(xMaxRaw);
+  var yrLabels = [];
+  for (var _y = 2021; _y <= yrEnd; _y++) yrLabels.push(_y);
   function xS(x) { return PAD.l + (x - xMin) / (xMax - xMin) * (W - PAD.l - PAD.r); }
   function yS(y) { return H - PAD.b - y / pMax * (H - PAD.t - PAD.b); }
   var ns = 'http://www.w3.org/2000/svg';
@@ -491,7 +498,7 @@ function renderRM() {
     var t = el('text', { x: PAD.l - 4, y: y + 4, 'text-anchor': 'end', 'font-size': '10', 'font-family': 'monospace', fill: '#8C8A86' });
     t.textContent = cy + (p >= 1000 ? (p / 1000 + 'k') : p); g.appendChild(t);
   });
-  [2021, 2022, 2023, 2024, 2025, 2026].forEach(function(yr) {
+  yrLabels.forEach(function(yr) {
     var x = xS(yr); var f = yr >= 2026; var isSel = selYear === yr;
     g.appendChild(el('line', { x1: x, y1: PAD.t, x2: x, y2: H - PAD.b, stroke: isSel ? '#4A90D9' : (f ? '#D8D4CA' : '#E8E5E0'), 'stroke-width': isSel ? '1.8' : (f ? '1.2' : '.7'), 'stroke-dasharray': f ? '5 3' : 'none' }));
     var lb = el('text', { x: x, y: H - PAD.b + 14, 'text-anchor': 'middle', 'font-size': '11', 'font-family': 'sans-serif', fill: isSel ? '#4A90D9' : (f ? '#B0ADA8' : '#6A6865'), cursor: 'pointer', 'font-weight': isSel ? '700' : '400' });
@@ -595,20 +602,38 @@ function initSceneMatrix(SCENES) {
   tbody.innerHTML = SCENES.map(function(r, i) {
     function cell(lv) {
       var c = LEVEL_COLORS[lv], ic = LEVEL_ICONS[lv];
-      return '<td style="padding:8px 12px;text-align:center;"><div style="width:28px;height:28px;border-radius:5px;background:' + c + ';margin:0 auto;display:flex;align-items:center;justify-content:center;"><span style="font-size:9px;color:' + (lv <= 1 ? '#8C8A86' : '#fff') + ';font-weight:600;">' + ic + '</span></div></td>';
+      return '<td class="sm-cell" rowspan="2"><div class="sm-dot" style="background:' + c + ';"><span style="font-size:9px;color:' + (lv <= 1 ? '#8C8A86' : '#fff') + ';font-weight:600;">' + ic + '</span></div></td>';
     }
-    return '<tr data-i="' + i + '" style="border-bottom:1px solid var(--ru);cursor:pointer;transition:background .12s;">' +
-      '<td style="padding:10px 14px;font-size:11px;font-weight:500;white-space:nowrap;">' + r.name + '</td>' +
-      cell(r.ai) + cell(r.ar) + cell(r.mr) + cell(r.vr) + '</tr>';
+    return (
+      '<tr data-i="' + i + '" class="sm-row sm-row-a" style="cursor:pointer;">' +
+        '<td class="sm-td-persona">' + (r.persona || '') + '</td>' +
+        cell(r.ai) + cell(r.ar) + cell(r.mr) + cell(r.vr) +
+      '</tr>' +
+      '<tr data-i="' + i + '" class="sm-row sm-row-b" style="cursor:pointer;border-bottom:1px solid var(--ru);">' +
+        '<td class="sm-td-scene">' + r.name + '</td>' +
+      '</tr>'
+    );
   }).join('');
+  // 双行合为一组，按 data-i 批量处理
+  function getRowGroup(idx) { return tbody.querySelectorAll('tr[data-i="' + idx + '"]'); }
   tbody.querySelectorAll('tr').forEach(function(tr) {
-    tr.addEventListener('mouseenter', function() { if (selRow !== this) this.style.background = '#FAFAF8'; });
-    tr.addEventListener('mouseleave', function() { if (selRow !== this) this.style.background = ''; });
+    tr.addEventListener('mouseenter', function() {
+      var idx = this.dataset.i;
+      if (selRow !== idx) getRowGroup(idx).forEach(function(r) { r.style.background = '#FAFAF8'; });
+    });
+    tr.addEventListener('mouseleave', function() {
+      var idx = this.dataset.i;
+      if (selRow !== idx) getRowGroup(idx).forEach(function(r) { r.style.background = ''; });
+    });
     tr.addEventListener('click', function() {
-      var i = +this.dataset.i, r = SCENES[i];
-      if (selRow === this) { selRow = null; this.style.background = ''; detDiv.style.display = 'none'; return; }
-      if (selRow) selRow.style.background = '';
-      selRow = this; this.style.background = '#F0EDE8';
+      var idx = this.dataset.i, r = SCENES[+idx];
+      if (selRow === idx) {
+        getRowGroup(idx).forEach(function(row) { row.style.background = ''; });
+        selRow = null; detDiv.style.display = 'none'; return;
+      }
+      if (selRow !== null) getRowGroup(selRow).forEach(function(row) { row.style.background = ''; });
+      selRow = idx;
+      getRowGroup(idx).forEach(function(row) { row.style.background = '#F0EDE8'; });
       dtTitle.textContent = r.name; dtBody.textContent = r.notes; detDiv.style.display = 'block';
     });
   });
@@ -711,55 +736,174 @@ function initS3() {
   function renderMS() {
     if (!msSvg) return;
     msSvg.innerHTML = '';
-    var W = msSvg.parentElement.clientWidth || 1000, H = 160;
-    var PAD = { l: 20, r: 20, t: 10, b: 32 };
+
+    /* ── SVG 工具 ── */
     var ns = 'http://www.w3.org/2000/svg';
-    function el(t, a) { var e = document.createElementNS(ns, t); Object.entries(a).forEach(function(kv) { e.setAttribute(kv[0], kv[1]); }); return e; }
-    var n = MS.length, step = (W - PAD.l - PAD.r) / (n - 1);
-    var lineY = H - PAD.b - 12;
-    msSvg.appendChild(el('line', { x1: PAD.l, y1: lineY, x2: W - PAD.r, y2: lineY, stroke: '#E2DFDA', 'stroke-width': '2' }));
-    var defs = el('defs', {}); var lg = el('linearGradient', { id: 'ms-fade', x1: '0%', y1: '0%', x2: '100%', y2: '0%' });
-    [{ offset: '0%', color: 'rgba(255,255,255,0.9)' }, { offset: '6%', color: 'rgba(255,255,255,0)' }, { offset: '94%', color: 'rgba(255,255,255,0)' }, { offset: '100%', color: 'rgba(255,255,255,0.9)' }].forEach(function(s) {
-      var stop = el('stop', { offset: s.offset }); stop.setAttribute('stop-color', s.color); lg.appendChild(stop);
+    function el(t, a) {
+      var e = document.createElementNS(ns, t);
+      Object.entries(a).forEach(function(kv) { e.setAttribute(kv[0], kv[1]); });
+      return e;
+    }
+
+    /* ── 文字换行（中英混排，约 7 个中文字宽/行）── */
+    function wrapText(str, maxCh) {
+      var lines = [], cur = '', curW = 0;
+      for (var ci = 0; ci < str.length; ci++) {
+        var ch = str[ci], cw = ch.charCodeAt(0) > 255 ? 0.6 : 1;
+        if (curW + cw > maxCh && cur !== '') { lines.push(cur); cur = ch; curW = cw; }
+        else { cur += ch; curW += cw; }
+      }
+      if (cur) lines.push(cur);
+      return lines.slice(0, 3);
+    }
+
+    /* ── 按年份分组，支持同年多个事件 ── */
+    var byYear = {};
+    MS.forEach(function(m, idx) {
+      var y = m.y;
+      if (!byYear[y]) byYear[y] = [];
+      byYear[y].push({ m: m, idx: idx });
     });
-    defs.appendChild(lg); msSvg.appendChild(defs);
-    MS.forEach(function(m, i) {
-      var cx = PAD.l + i * step, isSel = selMs === i, cc = CAT_C[m.cat], r = isSel ? 10 : 7;
-      var above = i % 2 === 0;
-      var labelY = above ? lineY - r - 8 : lineY + r + 14;
-      var g = el('g', { cursor: 'pointer' });
-      g.appendChild(el('line', { x1: cx, y1: lineY - (above ? r + 2 : 0), x2: cx, y2: lineY + (above ? 0 : r + 2), stroke: cc, 'stroke-width': isSel ? '2' : '1.5', 'stroke-dasharray': above ? 'none' : '3 2' }));
-      if (isSel) g.appendChild(el('circle', { cx: cx, cy: lineY, r: r + 4, fill: 'none', stroke: cc, 'stroke-width': '1.5', opacity: '.35' }));
-      g.appendChild(el('circle', { cx: cx, cy: lineY, r: r, fill: isSel ? cc : '#fff', stroke: cc, 'stroke-width': '2' }));
-      var yl = el('text', { x: cx, y: H - PAD.b + 10, 'text-anchor': 'middle', 'font-size': '10', 'font-family': 'monospace', fill: isSel ? cc : '#8C8A86', 'font-weight': isSel ? '700' : '400' });
-      yl.textContent = m.y; msSvg.appendChild(yl);
-      var words = m.t.split(' '); var lines = []; var cur = '';
-      words.forEach(function(w) { if ((cur + w).length > 8) { if (cur) lines.push(cur.trim()); cur = w + ' '; } else cur += w + ' '; });
-      if (cur.trim()) lines.push(cur.trim());
-      lines.slice(0, 2).forEach(function(ln, li) {
-        var lbl = el('text', { x: cx, y: above ? labelY - li * 13 : labelY + li * 13, 'text-anchor': 'middle', 'font-size': '9.5', 'font-family': 'sans-serif', fill: isSel ? cc : CAT_C[m.cat], 'font-weight': isSel ? '600' : '500' });
-        lbl.textContent = ln; msSvg.appendChild(lbl);
+    var years = Object.keys(byYear).map(Number).sort(function(a, b) { return a - b; });
+    var maxPer = Math.max.apply(null, years.map(function(y) { return byYear[y].length; }));
+
+    /* ── 布局常量 ── */
+    var MIN_STEP = 108;    // 年份列最小间距（px）
+    var NODE_R   = 7;      // 节点半径
+    var LH       = 13;     // 标签行高
+    var MAX_LN   = 3;      // 最多行数
+    var EVT_H    = NODE_R * 2 + MAX_LN * LH + 18; // 单个事件占用高度
+    var PAD      = { l: 24, r: 24, t: 12, b: 38 }; // b: 年份行 + 图例行
+
+    var wrap = msSvg.parentElement;
+    wrap.style.overflowX = 'auto';
+    wrap.style.overflowY = 'visible';
+    wrap.style.webkitOverflowScrolling = 'touch';
+
+    var n     = years.length;
+    var minW  = PAD.l + PAD.r + (n - 1) * MIN_STEP;
+    var contW = wrap.clientWidth || 900;
+    var W     = Math.max(contW, minW);
+    var step  = (W - PAD.l - PAD.r) / (n - 1);
+
+    /* 事件区高度 = 同列最多事件数 × 单事件高 + 一个基础间距 */
+    var evtAreaH = maxPer * EVT_H + 20;
+    /* 轴线Y坐标（在事件区下方、年份行上方）*/
+    var axisY = PAD.t + evtAreaH;
+    var H     = axisY + 20 /* 年份行 */ + 18 /* 图例行 */ + PAD.b;
+
+    msSvg.setAttribute('width',  W);
+    msSvg.setAttribute('height', H);
+    msSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+    /* ── 水平轴线 ── */
+    msSvg.appendChild(el('line', {
+      x1: PAD.l, y1: axisY, x2: W - PAD.r, y2: axisY,
+      stroke: '#CBC8C2', 'stroke-width': '2'
+    }));
+
+    /* ── 年份刻度与事件渲染 ── */
+    years.forEach(function(yr, xi) {
+      var cx = PAD.l + xi * step;
+      var events = byYear[yr];
+      var isSel = events.some(function(e) { return selMs === e.idx; });
+
+      /* 年份刻度线 */
+      msSvg.appendChild(el('line', {
+        x1: cx, y1: axisY, x2: cx, y2: axisY + 5,
+        stroke: isSel ? CAT_C[events[0].m.cat] : '#8C8A86', 'stroke-width': '1.5'
+      }));
+      /* 年份文字 */
+      var yl = el('text', {
+        x: cx, y: axisY + 16,
+        'text-anchor': 'middle', 'font-size': '10',
+        'font-family': 'monospace',
+        fill: isSel ? '#1A1816' : '#6A6865',
+        'font-weight': isSel ? '700' : '400'
       });
-      var hit = el('rect', { x: cx - 22, y: above ? labelY - 26 : lineY - r - 2, width: 44, height: above ? lineY - labelY + 26 + r + 2 : r * 2 + 26, fill: 'rgba(0,0,0,0.001)', 'pointer-events': 'all' });
-      hit.addEventListener('click', function() {
-        selMs = (selMs === i) ? null : i;
-        if (selMs === null) { msDetail.style.display = 'none'; }
-        else {
-          msDetail.style.display = 'block';
-          document.getElementById('ms-det-year').textContent = m.y + '　';
-          document.getElementById('ms-det-title').textContent = m.t;
-          var catBadge = '<span style="font-size:10px;padding:1px 7px;border-radius:10px;background:' + cc + '22;color:' + cc + ';font-weight:500;margin-right:6px;">' + CAT_L[m.cat] + '</span>';
-          document.getElementById('ms-det-body').innerHTML = catBadge + m.d;
-        }
-        renderMS();
+      yl.textContent = yr;
+      msSvg.appendChild(yl);
+
+      /* 同年多事件：从轴线往上依次叠放 */
+      events.forEach(function(ev, ei) {
+        var m   = ev.m, idx = ev.idx;
+        var cc  = CAT_C[m.cat];
+        var rr  = selMs === idx ? NODE_R + 3 : NODE_R;
+        var selThis = selMs === idx;
+
+        /* 节点中心Y：从轴往上，每个事件占 EVT_H */
+        var nodeY = axisY - 14 - ei * EVT_H - rr;
+
+        /* 竖向连接线（节点底部 → 轴线或下一节点顶部）*/
+        var lineBot = ei === 0 ? axisY - 2 : axisY - 14 - (ei - 1) * EVT_H + (NODE_R + 3) + 2;
+        msSvg.appendChild(el('line', {
+          x1: cx, y1: nodeY + rr + 2, x2: cx, y2: lineBot,
+          stroke: cc, 'stroke-width': selThis ? '2' : '1.5', 'stroke-dasharray': '4 2'
+        }));
+
+        /* 选中光晕 */
+        if (selThis) msSvg.appendChild(el('circle', {
+          cx: cx, cy: nodeY, r: rr + 4,
+          fill: 'none', stroke: cc, 'stroke-width': '1.5', opacity: '.3'
+        }));
+
+        /* 节点圆 */
+        var g = el('g', { cursor: 'pointer' });
+        g.appendChild(el('circle', {
+          cx: cx, cy: nodeY, r: rr,
+          fill: selThis ? cc : '#fff', stroke: cc, 'stroke-width': '2'
+        }));
+
+        /* 标签（节点正上方，最后一行紧贴节点）*/
+        var txtLines = wrapText(m.t, 7);
+        txtLines.forEach(function(ln, li) {
+          var ty = nodeY - rr - 3 - (txtLines.length - 1 - li) * LH;
+          var lbl = el('text', {
+            x: cx, y: ty,
+            'text-anchor': 'middle', 'font-size': '9.5',
+            'font-family': 'sans-serif',
+            fill: cc, 'font-weight': selThis ? '700' : '500',
+            opacity: selThis ? '1' : '0.85'
+          });
+          lbl.textContent = ln;
+          msSvg.appendChild(lbl);
+        });
+
+        /* 点击热区 */
+        var hitTop = nodeY - rr - 3 - txtLines.length * LH - 2;
+        var hitH2  = rr * 2 + txtLines.length * LH + 8;
+        var hit = el('rect', {
+          x: cx - 30, y: hitTop, width: 60, height: hitH2,
+          fill: 'rgba(0,0,0,0.001)', 'pointer-events': 'all'
+        });
+        (function(m2, idx2, cc2) {
+          hit.addEventListener('click', function() {
+            selMs = (selMs === idx2) ? null : idx2;
+            if (selMs === null) {
+              msDetail.style.display = 'none';
+            } else {
+              msDetail.style.display = 'block';
+              document.getElementById('ms-det-year').textContent  = m2.y + '　';
+              document.getElementById('ms-det-title').textContent = m2.t;
+              var badge = '<span style="font-size:10px;padding:1px 7px;border-radius:10px;background:' + cc2 + '22;color:' + cc2 + ';font-weight:500;margin-right:6px;">' + CAT_L[m2.cat] + '</span>';
+              document.getElementById('ms-det-body').innerHTML = badge + m2.d;
+            }
+            renderMS();
+          });
+        })(m, idx, cc);
+        g.appendChild(hit);
+        msSvg.appendChild(g);
       });
-      g.appendChild(hit); msSvg.appendChild(g);
     });
-    var legX = PAD.l, legY = H - 3;
+
+    /* ── 图例 ── */
+    var legY = H - PAD.b + 12;
     Object.entries(CAT_C).forEach(function(kv, i) {
-      var lx = legX + i * 120;
-      var dot = el('circle', { cx: lx, cy: legY, r: 4, fill: kv[1] }); msSvg.appendChild(dot);
-      var lt = el('text', { x: lx + 7, y: legY + 4, 'font-size': '9', 'font-family': 'sans-serif', fill: '#8C8A86' }); lt.textContent = CAT_L[kv[0]]; msSvg.appendChild(lt);
+      var lx = PAD.l + i * 118;
+      msSvg.appendChild(el('circle', { cx: lx, cy: legY, r: 4, fill: kv[1] }));
+      var lt = el('text', { x: lx + 8, y: legY + 4, 'font-size': '9', 'font-family': 'sans-serif', fill: '#8C8A86' });
+      lt.textContent = CAT_L[kv[0]];
+      msSvg.appendChild(lt);
     });
   }
   renderMS();

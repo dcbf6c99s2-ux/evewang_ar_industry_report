@@ -307,3 +307,75 @@ body{background:var(--bg);font-family:var(--sans);color:var(--ink);-webkit-font-
   .m4g{grid-template-columns:1fr 1fr;}
   .sec-nav{margin:40px -20px -60px;padding:20px;}
 }
+
+/* ── Scene Matrix 双行表头 ── */
+.sm-th-label {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--ru);
+  border-right: 1px solid var(--ru);
+  min-width: 148px;
+  vertical-align: middle;
+  background: #F0EDE8;
+}
+.sm-th-persona {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #6B3E0A;
+  letter-spacing: .04em;
+  padding-bottom: 4px;
+}
+.sm-th-divider {
+  border-top: 1px dashed var(--ru);
+  margin: 4px 0;
+}
+.sm-th-scene {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #0D3F7A;
+  letter-spacing: .04em;
+  padding-top: 4px;
+}
+.sm-head-row th, .sm-head-row td {
+  border-bottom: 1px solid var(--ru);
+}
+
+/* 数据行 */
+.sm-row { transition: background .12s; }
+.sm-row-a { border-bottom: none !important; }
+.sm-row-b { border-bottom: 1px solid var(--ru); }
+
+.sm-td-persona {
+  padding: 6px 14px 2px;
+  font-size: 10px;
+  color: var(--i3);
+  font-family: var(--mono);
+  white-space: nowrap;
+  border-right: 1px solid var(--ru);
+}
+.sm-td-scene {
+  padding: 2px 14px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  border-right: 1px solid var(--ru);
+}
+
+/* 适配度色块单元格（rowspan=2）*/
+.sm-cell {
+  padding: 8px 10px;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid var(--ru);
+}
+.sm-cell:last-child { border-right: none; }
+.sm-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
