@@ -15,7 +15,7 @@
   <h1 class="rh-t">智能眼镜行业全景<br>品类图谱、竞争格局与全球供应链</h1>
   <div class="rh-m">
     <span>制作人：王艺雯 · Eve Wang</span>
-    <span>最后编辑：2026年5月11日 20:14</span>
+    <span>最后更新时间：2026年5月12日 13:14</span>
   </div>
 </header>
 
@@ -24,6 +24,7 @@
   <button class="tbtn on" onclick="showTab(1)"><span class="tnum">01</span>行业概览</button>
   <button class="tbtn" onclick="showTab(2)"><span class="tnum">02</span>AR 赛道深度拆解</button>
   <button class="tbtn" onclick="showTab(3)"><span class="tnum">03</span>行业未来</button>
+  <button class="tbtn" onclick="showTab(4)"><span class="tnum">04</span>制作思路</button>
 </nav>
 
 <!-- ═══════════════════════════════════════
@@ -154,46 +155,137 @@
 
 <hr class="dvr">
 
-<!-- 模块 05：用户场景矩阵 -->
-<div class="mh"><span class="mn">模块 05</span><div><div class="mt">用户画像 × 使用场景矩阵</div><div class="md">四大品类在各场景的适配度 · 颜色越深代表该品类越适合该场景</div></div></div>
-<div style="background:var(--sf);border:1px solid var(--ru);border-radius:12px;overflow:hidden;margin-bottom:14px;">
-  <div style="overflow-x:auto;">
-    <table id="scene-table" style="width:100%;border-collapse:collapse;font-size:12px;">
-      <thead>
-        <tr class="sm-head-row" style="background:#F7F5F1;">
-          <th class="sm-th-label" rowspan="2">
-            <div class="sm-th-persona">👤 用户画像</div>
-            <div class="sm-th-divider"></div>
-            <div class="sm-th-scene">📍 使用场景</div>
-          </th>
-          <th style="padding:10px 14px;text-align:center;border-bottom:none;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#0D3F7A;background:#EBF2FB;padding:3px 8px;border-radius:8px;">🤖 AI 眼镜</span></th>
-          <th style="padding:10px 14px;text-align:center;border-bottom:none;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#3A2F8F;background:#EFEDFD;padding:3px 8px;border-radius:8px;">👓 AR 眼镜 OST</span></th>
-          <th style="padding:10px 14px;text-align:center;border-bottom:none;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#0B5040;background:#E2F5EE;padding:3px 8px;border-radius:8px;">🥽 MR 眼镜</span></th>
-          <th style="padding:10px 14px;text-align:center;border-bottom:none;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#6B3E0A;background:#FDF0D8;padding:3px 8px;border-radius:8px;">🎮 VR 眼镜</span></th>
-        </tr>
-        <tr class="sm-head-row" style="background:#F7F5F1;">
-          <td colspan="4" style="padding:2px 0 6px;border-bottom:1px solid var(--ru);font-size:9px;color:var(--i3);text-align:center;letter-spacing:.04em;">适配度：● 极佳 &nbsp;◑ 较好 &nbsp;○ 一般 &nbsp;— 不适合</td>
-        </tr>
-      </thead>
-      <tbody id="scene-tbody"></tbody>
-    </table>
+<!-- 模块 05：用户画像 -->
+<div class="mh"><span class="mn">模块 05</span><div><div class="mt">用户画像</div><div class="md">主要目标用户群体特征 · 年龄 · 职业 · 消费水平</div></div></div>
+<div class="pers-grid">
+  <div class="pers-card">
+    <div class="pers-icon">🧑‍🎓</div>
+    <div class="pers-name">年轻创意族</div>
+    <div class="pers-tags">
+      <span class="pers-tag pers-age">18–28岁</span>
+      <span class="pers-tag pers-job">学生 / UP主 / 创作者</span>
+      <span class="pers-tag pers-inc">¥2K–5K/月</span>
+    </div>
+    <div class="pers-note">关注颜值与社交属性，追求轻量低门槛的 AI/AR 体验，对价格高度敏感</div>
+    <div class="pers-fit">适配：<strong>AI眼镜</strong> · 入门 AR 眼镜</div>
   </div>
-  <div style="padding:10px 14px;background:#F7F5F1;border-top:1px solid var(--ru);font-size:10px;color:var(--i3);display:flex;gap:16px;flex-wrap:wrap;">
-    <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#1A1816;border-radius:3px;display:inline-block;"></span>最佳适配</span>
-    <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#6A6865;border-radius:3px;display:inline-block;"></span>适合</span>
-    <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#CBC8C2;border-radius:3px;display:inline-block;"></span>有限适配</span>
-    <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#F0EDE8;border-radius:3px;display:inline-block;"></span>不适合</span>
-    <span style="margin-left:auto;font-style:italic;">点击行查看场景说明</span>
+  <div class="pers-card">
+    <div class="pers-icon">💼</div>
+    <div class="pers-name">科技白领</div>
+    <div class="pers-tags">
+      <span class="pers-tag pers-age">25–35岁</span>
+      <span class="pers-tag pers-job">互联网 / 设计 / 产品</span>
+      <span class="pers-tag pers-inc">¥8K–20K/月</span>
+    </div>
+    <div class="pers-note">追求显示质量与效率工具，愿意为高分辨率和 AI 功能付溢价</div>
+    <div class="pers-fit">适配：<strong>中高端 AR 眼镜</strong> · MR 设备</div>
+  </div>
+  <div class="pers-card">
+    <div class="pers-icon">🗺</div>
+    <div class="pers-name">都市通勤族</div>
+    <div class="pers-tags">
+      <span class="pers-tag pers-age">22–40岁</span>
+      <span class="pers-tag pers-job">各行业白领</span>
+      <span class="pers-tag pers-inc">¥6K–12K/月</span>
+    </div>
+    <div class="pers-note">注重导航、翻译等实用功能，全天佩戴舒适度和续航是核心诉求</div>
+    <div class="pers-fit">适配：<strong>AI眼镜</strong> · 轻量 AR 眼镜</div>
+  </div>
+  <div class="pers-card">
+    <div class="pers-icon">🎯</div>
+    <div class="pers-name">知识决策者</div>
+    <div class="pers-tags">
+      <span class="pers-tag pers-age">30–45岁</span>
+      <span class="pers-tag pers-job">管理 / 咨询 / 创业者</span>
+      <span class="pers-tag pers-inc">¥15K+/月</span>
+    </div>
+    <div class="pers-note">关注信息获取效率与商务场景，注重品牌形象，高端设备付费意愿强</div>
+    <div class="pers-fit">适配：<strong>高端 AR 眼镜</strong> · MR 设备</div>
+  </div>
+  <div class="pers-card">
+    <div class="pers-icon">🔧</div>
+    <div class="pers-name">工业从业者</div>
+    <div class="pers-tags">
+      <span class="pers-tag pers-age">28–50岁</span>
+      <span class="pers-tag pers-job">工程师 / 技术员 / 医疗</span>
+      <span class="pers-tag pers-inc">B端采购 / 企业配发</span>
+    </div>
+    <div class="pers-note">关注专业精度与安全性，需集成企业系统，使用场景固定且专业</div>
+    <div class="pers-fit">适配：<strong>企业级 AR</strong>（HoloLens · Magic Leap）</div>
+  </div>
+  <div class="pers-card">
+    <div class="pers-icon">🌍</div>
+    <div class="pers-name">全球科技爱好者</div>
+    <div class="pers-tags">
+      <span class="pers-tag pers-age">25–40岁</span>
+      <span class="pers-tag pers-job">海外用户 / 技术博主</span>
+      <span class="pers-tag pers-inc">早期采用者</span>
+    </div>
+    <div class="pers-note">关注最新技术与生态兼容性，是口碑传播的关键群体，购买力强</div>
+    <div class="pers-fit">适配：<strong>XREAL · VITURE · Even G1</strong> 海外款</div>
   </div>
 </div>
-<div id="scene-detail" style="display:none;padding:12px 16px;background:#F7F5F1;border-radius:9px;font-size:11px;color:var(--i2);line-height:1.7;margin-bottom:14px;border-left:3px solid var(--ink);">
-  <strong id="sd-title" style="display:block;font-size:12px;margin-bottom:4px;"></strong>
-  <span id="sd-body"></span>
+
+<!-- 模块 06：使用场景 -->
+<div class="mh" style="margin-top:28px;"><span class="mn">模块 06</span><div><div class="mt">使用场景</div><div class="md">四大品类核心应用场景</div></div></div>
+<div class="scene-grid">
+  <div class="scene-cat-card">
+    <div class="scene-cat-hd" style="border-left:3px solid #0D3F7A;">🤖 AI 眼镜</div>
+    <div class="scene-cat-body">
+      <ul class="scene-list">
+        <li>AI 语音问答（GPT · 千问 · Gemini）</li>
+        <li>实时翻译 &amp; 字幕叠加</li>
+        <li>拍摄记录 &amp; 视觉识别问答</li>
+        <li>导航提醒 · 日程 · 健康监测</li>
+        <li>日常全天候佩戴（36–45g）</li>
+      </ul>
+      <div class="scene-rep">代表产品：Meta Ray-Ban · 夸克 G1 · Even G1 · 小米 AI 眼镜</div>
+    </div>
+  </div>
+  <div class="scene-cat-card">
+    <div class="scene-cat-hd" style="border-left:3px solid #3A2F8F;">👓 AR 眼镜（OST）</div>
+    <div class="scene-cat-body">
+      <ul class="scene-list">
+        <li>大屏沉浸观影（~120" 等效）</li>
+        <li>游戏串流（PC · 主机 · 云游戏）</li>
+        <li>多窗口桌面扩展 · 生产力辅助</li>
+        <li>工业 HUD 信息叠加 · B端专业应用</li>
+        <li>空间锚定 · 3DoF/6DoF 交互</li>
+      </ul>
+      <div class="scene-rep">代表产品：XREAL One · 雷鸟 Air3 · Rokid Max · 夸克 S1</div>
+    </div>
+  </div>
+  <div class="scene-cat-card">
+    <div class="scene-cat-hd" style="border-left:3px solid #0B5040;">🥽 MR 眼镜（VST）</div>
+    <div class="scene-cat-body">
+      <ul class="scene-list">
+        <li>空间多窗口沉浸办公</li>
+        <li>虚实融合协作会议</li>
+        <li>医疗 · 教育 3D 可视化</li>
+        <li>3D 设计与空间计算创作</li>
+        <li>沉浸式影视 · 社交体验</li>
+      </ul>
+      <div class="scene-rep">代表产品：Apple Vision Pro · Samsung Galaxy XR · Meta Quest 3</div>
+    </div>
+  </div>
+  <div class="scene-cat-card">
+    <div class="scene-cat-hd" style="border-left:3px solid #6B3E0A;">🎮 VR 眼镜</div>
+    <div class="scene-cat-body">
+      <ul class="scene-list">
+        <li>全沉浸游戏（Meta 应用商店）</li>
+        <li>影视内容娱乐（Netflix VR · 腾讯视频）</li>
+        <li>VR 培训与工业仿真模拟</li>
+        <li>社交虚拟空间（Horizon · VRChat）</li>
+        <li>健身 · 心理治疗 · 康复训练</li>
+      </ul>
+      <div class="scene-rep">代表产品：Meta Quest 3 · Sony PS VR2 · 字节 PICO 4</div>
+    </div>
+  </div>
 </div>
 
-<div class="fn"><strong>数据说明：</strong>AI眼镜采用IDC 2025Q3全球口径；AR眼镜采用CINNO Research 2025全年中国消费级口径；VR/MR采用Counterpoint 2024Q4全球口径。Sony MicroOLED（0.55"/0.68"）被XREAL Air2系列、Rokid Max、RayNeo Air2S、VITURE Pro广泛采用；视涯技术（Seeya）为VITURE One等中端产品提供国产MicroOLED方案；舜为科技提供ODM整机代工服务。</div>
+<div class="fn" style="margin-top:28px;"><strong>数据说明：</strong>AI眼镜采用IDC 2025Q3全球口径；AR眼镜采用CINNO Research 2025全年中国消费级口径；VR/MR采用Counterpoint 2024Q4全球口径。用户画像基于公开市场调研综合整理，仅供参考。</div>
 
-<div class="sec-nav">
+<div class="sec-nav" style="justify-content:flex-end;">
   <button class="sec-nav-btn" onclick="showTab(2)">02 · AR 赛道深度拆解 →</button>
 </div>
 </div></div><!-- /s1 -->
@@ -313,7 +405,7 @@
 <!-- 模块 01：里程碑 -->
 <div class="mh"><span class="mn">模块 01</span><div><div class="mt">过去十年行业里程碑（2016—2026）</div><div class="md">从企业级先驱到消费级爆发 · 点击节点查看详情</div></div></div>
 <div style="background:var(--sf);border:1px solid var(--ru);border-radius:12px;overflow:hidden;margin-bottom:8px;">
-  <div style="padding:24px 20px 0;"><svg id="ms-svg" style="display:block;overflow:visible;min-width:100%;"></svg></div>
+  <div id="ms-svg"></div>
   <div id="ms-detail" style="display:none;padding:14px 20px 16px;border-top:1px solid var(--ru);background:#F7F5F1;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span id="ms-det-year" style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--i3);"></span><span id="ms-det-title" style="font-size:13px;font-weight:600;color:var(--ink);"></span></div>
     <div id="ms-det-body" style="font-size:11px;color:var(--i2);line-height:1.7;"></div>
@@ -395,8 +487,203 @@
 <div class="fn" style="margin-top:8px;"><strong>数据来源：</strong>IDC · Gartner · IDTechEx 机构预测综合推演；2026 年前为历史实际值，2027 年起为趋势预测，受政策、资本、供应链等因素影响，实际节奏可能快于或慢于预期。</div>
 <div class="sec-nav">
   <button class="sec-nav-btn" onclick="showTab(2)">← 02 · AR 赛道深度拆解</button>
+  <button class="sec-nav-btn" onclick="showTab(4)">04 · 制作思路 →</button>
 </div>
 </div></div><!-- /s3 -->
+
+<!-- ═══════════════════════════════════════
+     SECTION 4 — 制作思路
+═══════════════════════════════════════ -->
+<div id="s4" class="sp"><div class="rb">
+<div class="shd"><div class="se">Section 04</div><h2 class="st">制作思路</h2></div>
+
+<!-- 概览数字 -->
+<div class="vc-stats">
+  <div class="vc-stat"><div class="vc-stat-n">4</div><div class="vc-stat-l">文件模块化架构</div></div>
+  <div class="vc-stat"><div class="vc-stat-n">7</div><div class="vc-stat-l">核心可视化组件</div></div>
+  <div class="vc-stat"><div class="vc-stat-n">30<span style="font-size:18px">+</span></div><div class="vc-stat-l">次数据迭代更新</div></div>
+  <div class="vc-stat"><div class="vc-stat-n">3</div><div class="vc-stat-l">AI 工具协同</div></div>
+  <div class="vc-stat"><div class="vc-stat-n">2</div><div class="vc-stat-l">部署渠道（国内+海外）</div></div>
+</div>
+
+<!-- 模块 01：Vibe Coding 工具链 -->
+<div class="mh"><span class="mn">模块 01</span><div><div class="mt">Vibe Coding 工具链</div><div class="md">AI 协作 · 开发工具 · 部署架构</div></div></div>
+
+<div class="vc-diagram">
+
+  <!-- AI 协作层 -->
+  <div class="vc-layer-label">🤖 AI 协作层</div>
+  <div class="vc-layer">
+    <div class="vc-tool" style="border-top-color:#0052CC;">
+      <div class="vc-tool-icon" style="background:#EBF2FB;color:#0052CC;">C</div>
+      <div class="vc-tool-name">Claude Chat</div>
+      <div class="vc-tool-tags"><span class="vc-tag" style="background:#EBF2FB;color:#0052CC;">框架设计</span><span class="vc-tag" style="background:#EBF2FB;color:#0052CC;">内容策略</span></div>
+      <div class="vc-tool-desc">报告结构规划、叙事逻辑设计、初始 Prompt 工程</div>
+    </div>
+    <div class="vc-flow-arr">→</div>
+    <div class="vc-tool" style="border-top-color:#854F0B;">
+      <div class="vc-tool-icon" style="background:#FDF0D8;color:#854F0B;">Co</div>
+      <div class="vc-tool-name">Claude Cowork</div>
+      <div class="vc-tool-tags"><span class="vc-tag" style="background:#FDF0D8;color:#854F0B;">代码实现</span><span class="vc-tag" style="background:#FDF0D8;color:#854F0B;">Bug修复</span><span class="vc-tag" style="background:#FDF0D8;color:#854F0B;">数据维护</span></div>
+      <div class="vc-tool-desc">文件读写、JSON迭代、CSS/JS精确修改、持续数据更新</div>
+    </div>
+    <div class="vc-flow-arr">←</div>
+    <div class="vc-tool" style="border-top-color:#1A6E4E;">
+      <div class="vc-tool-icon" style="background:#E2F5EE;color:#1A6E4E;">G</div>
+      <div class="vc-tool-name">Gemini</div>
+      <div class="vc-tool-tags"><span class="vc-tag" style="background:#E2F5EE;color:#1A6E4E;">信息检索</span><span class="vc-tag" style="background:#E2F5EE;color:#1A6E4E;">数据校准</span><span class="vc-tag" style="background:#E2F5EE;color:#1A6E4E;">Token优化</span></div>
+      <div class="vc-tool-desc">产品数据核实、Coding 思路指导、节省 Token 建议</div>
+    </div>
+  </div>
+
+  <div class="vc-layer-conn"><div class="vc-conn-line"></div><span class="vc-conn-label">本地预览 & 版本控制</span><div class="vc-conn-line"></div></div>
+
+  <!-- 开发工具层 -->
+  <div class="vc-layer-label">⚙️ 开发工具层</div>
+  <div class="vc-layer" style="justify-content:center;gap:32px;">
+    <div class="vc-tool" style="border-top-color:#4A4743;max-width:220px;">
+      <div class="vc-tool-icon" style="background:#F0EEEB;color:#4A4743;">⌨️</div>
+      <div class="vc-tool-name">Mac Terminal</div>
+      <div class="vc-tool-tags"><span class="vc-tag" style="background:#F0EEEB;color:#4A4743;">本地预览</span></div>
+      <div class="vc-tool-desc">python -m http.server<br>本地实时预览报告效果</div>
+    </div>
+    <div class="vc-flow-arr">→</div>
+    <div class="vc-tool" style="border-top-color:#1A1816;max-width:220px;">
+      <div class="vc-tool-icon" style="background:#F0EEEB;color:#1A1816;">⑂</div>
+      <div class="vc-tool-name">GitHub</div>
+      <div class="vc-tool-tags"><span class="vc-tag" style="background:#F0EEEB;color:#1A1816;">版本控制</span><span class="vc-tag" style="background:#F0EEEB;color:#1A1816;">代码储存</span></div>
+      <div class="vc-tool-desc">代码备份与版本管理，连接 Vercel / Cloudflare 自动部署</div>
+    </div>
+  </div>
+
+  <div class="vc-layer-conn"><div class="vc-conn-line"></div><span class="vc-conn-label">正式部署</span><div class="vc-conn-line"></div></div>
+
+  <!-- 部署层 -->
+  <div class="vc-layer-label">🚀 部署层</div>
+  <div class="vc-layer" style="justify-content:center;gap:32px;">
+    <div class="vc-tool" style="border-top-color:#0052CC;max-width:220px;">
+      <div class="vc-tool-icon" style="background:#EBF2FB;color:#0052CC;">▲</div>
+      <div class="vc-tool-name">Vercel</div>
+      <div class="vc-tool-tags"><span class="vc-tag" style="background:#EBF2FB;color:#0052CC;">海外 URL</span></div>
+      <div class="vc-tool-desc">GitHub 连接自动部署，海外访问稳定，HTTPS 免费</div>
+    </div>
+    <div class="vc-tool" style="border-top-color:#E67E22;max-width:220px;">
+      <div class="vc-tool-icon" style="background:#FDF0D8;color:#E67E22;">☁</div>
+      <div class="vc-tool-name">Cloudflare</div>
+      <div class="vc-tool-tags"><span class="vc-tag" style="background:#FDF0D8;color:#E67E22;">国内 URL</span></div>
+      <div class="vc-tool-desc">Pages 服务，国内访问加速，CDN 全球节点覆盖</div>
+    </div>
+  </div>
+
+</div><!-- /vc-diagram -->
+
+<!-- 模块 02：制作过程回顾 -->
+<div class="mh"><span class="mn">模块 02</span><div><div class="mt">制作过程回顾</div><div class="md">关键步骤 · 思路调整 · 技术决策</div></div></div>
+
+<div class="mk-steps">
+
+  <div class="mk-step">
+    <div class="mk-num" style="background:#EBF2FB;color:#0052CC;">01</div>
+    <div class="mk-body">
+      <div class="mk-phase">需求定义 &amp; 叙事设计</div>
+      <ul class="mk-list">
+        <li>确定三段式叙事结构：概览 → 拆解 → 未来</li>
+        <li>梳理 17 个子模块清单，明确每模块可视化形式</li>
+        <li>确立"是什么→谁在赢→往哪走"的读者路径</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mk-step">
+    <div class="mk-num" style="background:#FDF0D8;color:#854F0B;">02</div>
+    <div class="mk-body">
+      <div class="mk-phase">技术选型 &amp; 架构设计</div>
+      <ul class="mk-list">
+        <li>4 文件模块化：index / styles / charts / data 完全分离</li>
+        <li>JSON 驱动渲染：所有内容在数据层，无需碰 HTML/JS</li>
+        <li>技术栈：D3.js v7 + Chart.js 4.4 + TopoJSON v3</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mk-step">
+    <div class="mk-num" style="background:#E2F5EE;color:#1A6E4E;">03</div>
+    <div class="mk-body">
+      <div class="mk-phase">框架开发（Claude Chat 主导）</div>
+      <ul class="mk-list">
+        <li>完整 HTML 骨架 + CSS 设计系统（10 个主题变量）</li>
+        <li>Tab 切换 + 懒加载渲染引擎</li>
+        <li>用户画像、使用场景、品类卡片等静态模块</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mk-step">
+    <div class="mk-num" style="background:#EFEDFD;color:#3A2F8F;">04</div>
+    <div class="mk-body">
+      <div class="mk-phase">核心可视化实现（Claude Cowork）</div>
+      <ul class="mk-list">
+        <li>D3 世界地图：品牌分布 + 供应链双视图，省级地图</li>
+        <li>Roadmap 散点图：年份×价格，懒加载+年份筛选</li>
+        <li>里程碑时间轴：从 SVG 重构为 HTML 横向滚动卡片</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mk-step">
+    <div class="mk-num" style="background:#FAC8C8;color:#8B1A1A;">05</div>
+    <div class="mk-body">
+      <div class="mk-phase">Bug 修复 &amp; 系统优化</div>
+      <ul class="mk-list">
+        <li>地图 ID 类型错误：world-atlas v2 为数字，改用 String() 强转</li>
+        <li>VR 标签 CSS 冲突：.dvr 是分隔线，改用独立类名 .dvr2</li>
+        <li>浏览器缓存：fetch 加 ?v=Date.now() 强制刷新</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mk-step">
+    <div class="mk-num" style="background:#FDF0D8;color:#6B3E0A;">06</div>
+    <div class="mk-body">
+      <div class="mk-phase">数据持续迭代（30+ 次更新）</div>
+      <ul class="mk-list">
+        <li>VITURE Luma 系列拆分为三款（$399 / $499 / $599）</li>
+        <li>RayNeo 国内 9 款 + 海外 9 款完整产品线重建</li>
+        <li>Rokid 国内 9 款 + 海外 8 款，Apple 时间轴调整</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mk-step">
+    <div class="mk-num" style="background:#E2F5EE;color:#0B5040;">07</div>
+    <div class="mk-body">
+      <div class="mk-phase">框架提炼 &amp; 文档化</div>
+      <ul class="mk-list">
+        <li>提炼 Cowork 报告框架 v1.1（md + txt 双格式）</li>
+        <li>归纳 10 条常见陷阱与修复方案</li>
+        <li>年份小数速查表、Python 批量替换脚本模板</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mk-step">
+    <div class="mk-num" style="background:#EBF2FB;color:#0D3F7A;">08</div>
+    <div class="mk-body">
+      <div class="mk-phase">部署 &amp; 发布</div>
+      <ul class="mk-list">
+        <li>GitHub 连接 Vercel：海外 URL 一键自动部署</li>
+        <li>Cloudflare Pages：国内访问加速，CDN 全球覆盖</li>
+        <li>每次数据更新 push 即触发自动重新部署</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /mk-steps -->
+
+<div class="sec-nav">
+  <button class="sec-nav-btn" onclick="showTab(3)">← 03 · 行业未来</button>
+</div>
+</div></div><!-- /s4 -->
 
 <!-- ══ 外部依赖 ══ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>

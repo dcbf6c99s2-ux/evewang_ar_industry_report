@@ -7,6 +7,7 @@
 /* ── 全局状态 ── */
 var GR; // 从 AR_DATA 读取
 var s3Done = false;
+var s4Done = false;
 var rmDone = false;
 var rmCur  = 'cn';
 var rmH    = {};
@@ -19,6 +20,8 @@ function showTab(n) {
   document.getElementById('s1').classList.toggle('on', n === 1);
   document.getElementById('s2').classList.toggle('on', n === 2);
   document.getElementById('s3').classList.toggle('on', n === 3);
+  var s4el = document.getElementById('s4');
+  if (s4el) s4el.classList.toggle('on', n === 4);
   document.querySelectorAll('.tbtn').forEach(function(b, i) {
     b.classList.toggle('on', i === n - 1);
   });
@@ -33,7 +36,6 @@ function initAll(DATA) {
   initS1Donuts(DATA.s1_donuts);
   initWorldMap(DATA);
   initS2Pies(DATA.s2_pies);
-  initSceneMatrix(DATA.scene_matrix);
   initBOM(DATA.bom);
   initFunding(DATA.funding_chart, DATA.funding_cards);
   initStratTable(DATA.strategy_table);
@@ -105,7 +107,7 @@ function initWorldMap(DATA) {
   var BD = DATA.brand_data;
   var SC = DATA.supply_chain;
   var BCL = { ai: 'AI眼镜', ost: 'AR眼镜（OST）', vst: 'MR/VST', vr: 'VR眼镜' };
-  var BT  = { ai: 'dai', ost: 'dost', vst: 'dvst', vr: 'dvr' };
+  var BT  = { ai: 'dai', ost: 'dost', vst: 'dvst', vr: 'dvr2' };
 
   var WSVG = d3.select('#wms').attr('viewBox', '0 0 880 400').style('background', '#C4D6E2');
   var WTIP = document.getElementById('wmtip');
@@ -182,7 +184,7 @@ function initWorldMap(DATA) {
 
   function drawCN(info, svEl) {
     if (!WF) return;
-    var cf = WF.find(function(d) { return d.id === '156'; });
+    var cf = WF.find(function(d) { return String(d.id) === '156'; });
     if (!cf) return;
     var CW = 300, CH = 270;
     svEl.setAttribute('viewBox', '0 0 ' + CW + ' ' + CH);
@@ -258,7 +260,7 @@ function initWorldMap(DATA) {
     WSVG.selectAll('g.wb').remove();
     var DATA_SRC = WM === 'brand' ? BD : SC;
     Object.keys(DATA_SRC).forEach(function(id) {
-      var f = WF.find(function(d) { return d.id === id; });
+      var f = WF.find(function(d) { return String(d.id) === id; });
       if (!f) return;
       var c = WG.centroid(f); var cx = c[0], cy = c[1];
       if (id === '840') { cx -= 24; cy += 8; }
@@ -588,58 +590,6 @@ function mvTip(e) {
 }
 
 /* ════════════════════════════════════════
-   S1 — 场景矩阵
-════════════════════════════════════════ */
-function initSceneMatrix(SCENES) {
-  var LEVEL_COLORS = ['#F0EDE8', '#CBC8C2', '#6A6865', '#1A1816'];
-  var LEVEL_ICONS  = ['—', '○', '◑', '●'];
-  var tbody = document.getElementById('scene-tbody');
-  var detDiv = document.getElementById('scene-detail');
-  var dtTitle = document.getElementById('sd-title');
-  var dtBody  = document.getElementById('sd-body');
-  if (!tbody) return;
-  var selRow = null;
-  tbody.innerHTML = SCENES.map(function(r, i) {
-    function cell(lv) {
-      var c = LEVEL_COLORS[lv], ic = LEVEL_ICONS[lv];
-      return '<td class="sm-cell" rowspan="2"><div class="sm-dot" style="background:' + c + ';"><span style="font-size:9px;color:' + (lv <= 1 ? '#8C8A86' : '#fff') + ';font-weight:600;">' + ic + '</span></div></td>';
-    }
-    return (
-      '<tr data-i="' + i + '" class="sm-row sm-row-a" style="cursor:pointer;">' +
-        '<td class="sm-td-persona">' + (r.persona || '') + '</td>' +
-        cell(r.ai) + cell(r.ar) + cell(r.mr) + cell(r.vr) +
-      '</tr>' +
-      '<tr data-i="' + i + '" class="sm-row sm-row-b" style="cursor:pointer;border-bottom:1px solid var(--ru);">' +
-        '<td class="sm-td-scene">' + r.name + '</td>' +
-      '</tr>'
-    );
-  }).join('');
-  // 双行合为一组，按 data-i 批量处理
-  function getRowGroup(idx) { return tbody.querySelectorAll('tr[data-i="' + idx + '"]'); }
-  tbody.querySelectorAll('tr').forEach(function(tr) {
-    tr.addEventListener('mouseenter', function() {
-      var idx = this.dataset.i;
-      if (selRow !== idx) getRowGroup(idx).forEach(function(r) { r.style.background = '#FAFAF8'; });
-    });
-    tr.addEventListener('mouseleave', function() {
-      var idx = this.dataset.i;
-      if (selRow !== idx) getRowGroup(idx).forEach(function(r) { r.style.background = ''; });
-    });
-    tr.addEventListener('click', function() {
-      var idx = this.dataset.i, r = SCENES[+idx];
-      if (selRow === idx) {
-        getRowGroup(idx).forEach(function(row) { row.style.background = ''; });
-        selRow = null; detDiv.style.display = 'none'; return;
-      }
-      if (selRow !== null) getRowGroup(selRow).forEach(function(row) { row.style.background = ''; });
-      selRow = idx;
-      getRowGroup(idx).forEach(function(row) { row.style.background = '#F0EDE8'; });
-      dtTitle.textContent = r.name; dtBody.textContent = r.notes; detDiv.style.display = 'block';
-    });
-  });
-}
-
-/* ════════════════════════════════════════
    S2 — BOM 图表
 ════════════════════════════════════════ */
 function initBOM(bom) {
@@ -733,181 +683,56 @@ function initS3() {
   var msSvg    = document.getElementById('ms-svg');
   var msDetail = document.getElementById('ms-detail');
   var selMs = null;
+
+  /* ── 按年份分组 ── */
+  var byYear = {};
+  MS.forEach(function(m, idx) {
+    if (!byYear[m.y]) byYear[m.y] = [];
+    byYear[m.y].push({ m: m, idx: idx });
+  });
+  var years = Object.keys(byYear).map(Number).sort(function(a, b) { return a - b; });
+
   function renderMS() {
     if (!msSvg) return;
-    msSvg.innerHTML = '';
-
-    /* ── SVG 工具 ── */
-    var ns = 'http://www.w3.org/2000/svg';
-    function el(t, a) {
-      var e = document.createElementNS(ns, t);
-      Object.entries(a).forEach(function(kv) { e.setAttribute(kv[0], kv[1]); });
-      return e;
-    }
-
-    /* ── 文字换行（中英混排，约 7 个中文字宽/行）── */
-    function wrapText(str, maxCh) {
-      var lines = [], cur = '', curW = 0;
-      for (var ci = 0; ci < str.length; ci++) {
-        var ch = str[ci], cw = ch.charCodeAt(0) > 255 ? 0.6 : 1;
-        if (curW + cw > maxCh && cur !== '') { lines.push(cur); cur = ch; curW = cw; }
-        else { cur += ch; curW += cw; }
-      }
-      if (cur) lines.push(cur);
-      return lines.slice(0, 3);
-    }
-
-    /* ── 按年份分组，支持同年多个事件 ── */
-    var byYear = {};
-    MS.forEach(function(m, idx) {
-      var y = m.y;
-      if (!byYear[y]) byYear[y] = [];
-      byYear[y].push({ m: m, idx: idx });
-    });
-    var years = Object.keys(byYear).map(Number).sort(function(a, b) { return a - b; });
-    var maxPer = Math.max.apply(null, years.map(function(y) { return byYear[y].length; }));
-
-    /* ── 布局常量 ── */
-    var MIN_STEP = 108;    // 年份列最小间距（px）
-    var NODE_R   = 7;      // 节点半径
-    var LH       = 13;     // 标签行高
-    var MAX_LN   = 3;      // 最多行数
-    var EVT_H    = NODE_R * 2 + MAX_LN * LH + 18; // 单个事件占用高度
-    var PAD      = { l: 24, r: 24, t: 12, b: 38 }; // b: 年份行 + 图例行
-
-    var wrap = msSvg.parentElement;
-    wrap.style.overflowX = 'auto';
-    wrap.style.overflowY = 'visible';
-    wrap.style.webkitOverflowScrolling = 'touch';
-
-    var n     = years.length;
-    var minW  = PAD.l + PAD.r + (n - 1) * MIN_STEP;
-    var contW = wrap.clientWidth || 900;
-    var W     = Math.max(contW, minW);
-    var step  = (W - PAD.l - PAD.r) / (n - 1);
-
-    /* 事件区高度 = 同列最多事件数 × 单事件高 + 一个基础间距 */
-    var evtAreaH = maxPer * EVT_H + 20;
-    /* 轴线Y坐标（在事件区下方、年份行上方）*/
-    var axisY = PAD.t + evtAreaH;
-    var H     = axisY + 20 /* 年份行 */ + 18 /* 图例行 */ + PAD.b;
-
-    msSvg.setAttribute('width',  W);
-    msSvg.setAttribute('height', H);
-    msSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-
-    /* ── 水平轴线 ── */
-    msSvg.appendChild(el('line', {
-      x1: PAD.l, y1: axisY, x2: W - PAD.r, y2: axisY,
-      stroke: '#CBC8C2', 'stroke-width': '2'
-    }));
-
-    /* ── 年份刻度与事件渲染 ── */
-    years.forEach(function(yr, xi) {
-      var cx = PAD.l + xi * step;
+    var cols = years.map(function(yr) {
       var events = byYear[yr];
-      var isSel = events.some(function(e) { return selMs === e.idx; });
+      var dotColor = CAT_C[events[0].m.cat];
+      var cards = events.map(function(ev) {
+        var m = ev.m, idx = ev.idx, cc = CAT_C[m.cat], on = selMs === idx;
+        return '<div class="ms-card' + (on ? ' ms-card-on' : '') + '" style="border-left-color:' + cc + '" data-idx="' + idx + '">' +
+          '<span class="ms-tag" style="background:' + cc + '22;color:' + cc + '">' + CAT_L[m.cat] + '</span>' +
+          '<div class="ms-ttl">' + m.t + '</div></div>';
+      }).join('');
+      return '<div class="ms-col"><div class="ms-dot" style="background:' + dotColor + '"></div>' +
+        '<div class="ms-yr">' + yr + '</div><div class="ms-cards">' + cards + '</div></div>';
+    }).join('');
 
-      /* 年份刻度线 */
-      msSvg.appendChild(el('line', {
-        x1: cx, y1: axisY, x2: cx, y2: axisY + 5,
-        stroke: isSel ? CAT_C[events[0].m.cat] : '#8C8A86', 'stroke-width': '1.5'
-      }));
-      /* 年份文字 */
-      var yl = el('text', {
-        x: cx, y: axisY + 16,
-        'text-anchor': 'middle', 'font-size': '10',
-        'font-family': 'monospace',
-        fill: isSel ? '#1A1816' : '#6A6865',
-        'font-weight': isSel ? '700' : '400'
+    var legend = Object.entries(CAT_C).map(function(kv) {
+      return '<div class="ms-leg-item"><span class="ms-leg-dot" style="background:' + kv[1] + '"></span>' + CAT_L[kv[0]] + '</div>';
+    }).join('');
+
+    msSvg.innerHTML = '<div class="ms-scroll"><div class="ms-cols">' + cols + '</div>' +
+      '<div class="ms-legend">' + legend + '</div></div>';
+
+    msSvg.querySelectorAll('.ms-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var idx = parseInt(card.getAttribute('data-idx'));
+        var m = MS[idx], cc = CAT_C[m.cat];
+        selMs = (selMs === idx) ? null : idx;
+        if (selMs === null) {
+          msDetail.style.display = 'none';
+        } else {
+          msDetail.style.display = 'block';
+          document.getElementById('ms-det-year').textContent  = m.y + '　';
+          document.getElementById('ms-det-title').textContent = m.t;
+          document.getElementById('ms-det-body').innerHTML =
+            '<span style="font-size:10px;padding:1px 7px;border-radius:10px;background:' + cc + '22;color:' + cc + ';font-weight:500;margin-right:6px;">' + CAT_L[m.cat] + '</span>' + m.d;
+        }
+        renderMS();
       });
-      yl.textContent = yr;
-      msSvg.appendChild(yl);
-
-      /* 同年多事件：从轴线往上依次叠放 */
-      events.forEach(function(ev, ei) {
-        var m   = ev.m, idx = ev.idx;
-        var cc  = CAT_C[m.cat];
-        var rr  = selMs === idx ? NODE_R + 3 : NODE_R;
-        var selThis = selMs === idx;
-
-        /* 节点中心Y：从轴往上，每个事件占 EVT_H */
-        var nodeY = axisY - 14 - ei * EVT_H - rr;
-
-        /* 竖向连接线（节点底部 → 轴线或下一节点顶部）*/
-        var lineBot = ei === 0 ? axisY - 2 : axisY - 14 - (ei - 1) * EVT_H + (NODE_R + 3) + 2;
-        msSvg.appendChild(el('line', {
-          x1: cx, y1: nodeY + rr + 2, x2: cx, y2: lineBot,
-          stroke: cc, 'stroke-width': selThis ? '2' : '1.5', 'stroke-dasharray': '4 2'
-        }));
-
-        /* 选中光晕 */
-        if (selThis) msSvg.appendChild(el('circle', {
-          cx: cx, cy: nodeY, r: rr + 4,
-          fill: 'none', stroke: cc, 'stroke-width': '1.5', opacity: '.3'
-        }));
-
-        /* 节点圆 */
-        var g = el('g', { cursor: 'pointer' });
-        g.appendChild(el('circle', {
-          cx: cx, cy: nodeY, r: rr,
-          fill: selThis ? cc : '#fff', stroke: cc, 'stroke-width': '2'
-        }));
-
-        /* 标签（节点正上方，最后一行紧贴节点）*/
-        var txtLines = wrapText(m.t, 7);
-        txtLines.forEach(function(ln, li) {
-          var ty = nodeY - rr - 3 - (txtLines.length - 1 - li) * LH;
-          var lbl = el('text', {
-            x: cx, y: ty,
-            'text-anchor': 'middle', 'font-size': '9.5',
-            'font-family': 'sans-serif',
-            fill: cc, 'font-weight': selThis ? '700' : '500',
-            opacity: selThis ? '1' : '0.85'
-          });
-          lbl.textContent = ln;
-          msSvg.appendChild(lbl);
-        });
-
-        /* 点击热区 */
-        var hitTop = nodeY - rr - 3 - txtLines.length * LH - 2;
-        var hitH2  = rr * 2 + txtLines.length * LH + 8;
-        var hit = el('rect', {
-          x: cx - 30, y: hitTop, width: 60, height: hitH2,
-          fill: 'rgba(0,0,0,0.001)', 'pointer-events': 'all'
-        });
-        (function(m2, idx2, cc2) {
-          hit.addEventListener('click', function() {
-            selMs = (selMs === idx2) ? null : idx2;
-            if (selMs === null) {
-              msDetail.style.display = 'none';
-            } else {
-              msDetail.style.display = 'block';
-              document.getElementById('ms-det-year').textContent  = m2.y + '　';
-              document.getElementById('ms-det-title').textContent = m2.t;
-              var badge = '<span style="font-size:10px;padding:1px 7px;border-radius:10px;background:' + cc2 + '22;color:' + cc2 + ';font-weight:500;margin-right:6px;">' + CAT_L[m2.cat] + '</span>';
-              document.getElementById('ms-det-body').innerHTML = badge + m2.d;
-            }
-            renderMS();
-          });
-        })(m, idx, cc);
-        g.appendChild(hit);
-        msSvg.appendChild(g);
-      });
-    });
-
-    /* ── 图例 ── */
-    var legY = H - PAD.b + 12;
-    Object.entries(CAT_C).forEach(function(kv, i) {
-      var lx = PAD.l + i * 118;
-      msSvg.appendChild(el('circle', { cx: lx, cy: legY, r: 4, fill: kv[1] }));
-      var lt = el('text', { x: lx + 8, y: legY + 4, 'font-size': '9', 'font-family': 'sans-serif', fill: '#8C8A86' });
-      lt.textContent = CAT_L[kv[0]];
-      msSvg.appendChild(lt);
     });
   }
   renderMS();
-  window.addEventListener('resize', renderMS);
 
   /* 未来折线图 */
   var fc = window._AR_DATA.future_chart;
@@ -943,7 +768,7 @@ window.initS3 = initS3;
 /* ════════════════════════════════════════
    启动：加载 JSON → 初始化
 ════════════════════════════════════════ */
-fetch('ar_data.json')
+fetch('ar_data.json?v=' + Date.now())
   .then(function(r) { return r.json(); })
   .then(function(data) {
     window._AR_DATA = data;

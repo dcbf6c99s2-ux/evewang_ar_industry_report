@@ -306,76 +306,91 @@ body{background:var(--bg);font-family:var(--sans);color:var(--ink);-webkit-font-
   .tbtn{padding:12px 18px;}
   .m4g{grid-template-columns:1fr 1fr;}
   .sec-nav{margin:40px -20px -60px;padding:20px;}
+  .pers-grid{grid-template-columns:repeat(2,1fr);}
+  .scene-grid{grid-template-columns:1fr;}
+  .ms-col{flex:0 0 130px;}
+}
+@media(max-width:600px){
+  .pers-grid{grid-template-columns:1fr;}
+  .c4{grid-template-columns:1fr;}
 }
 
-/* ── Scene Matrix 双行表头 ── */
-.sm-th-label {
-  padding: 10px 14px;
-  text-align: left;
-  border-bottom: 1px solid var(--ru);
-  border-right: 1px solid var(--ru);
-  min-width: 148px;
-  vertical-align: middle;
-  background: #F0EDE8;
-}
-.sm-th-persona {
-  font-size: 9.5px;
-  font-weight: 600;
-  color: #6B3E0A;
-  letter-spacing: .04em;
-  padding-bottom: 4px;
-}
-.sm-th-divider {
-  border-top: 1px dashed var(--ru);
-  margin: 4px 0;
-}
-.sm-th-scene {
-  font-size: 9.5px;
-  font-weight: 600;
-  color: #0D3F7A;
-  letter-spacing: .04em;
-  padding-top: 4px;
-}
-.sm-head-row th, .sm-head-row td {
-  border-bottom: 1px solid var(--ru);
-}
+/* ── Persona Cards (S1 模块05) ── */
+.pers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:4px;}
+.pers-card{background:var(--sf);border:1px solid var(--ru);border-radius:10px;padding:13px 14px;display:flex;flex-direction:column;gap:0;}
+.pers-icon{font-size:22px;margin-bottom:5px;line-height:1;}
+.pers-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;}
+.pers-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;}
+.pers-tag{font-size:10px;padding:2px 7px;border-radius:10px;border:1px solid;}
+.pers-age{background:#EBF2FB;color:#0D3F7A;border-color:#B5CBEB;}
+.pers-job{background:#EFEDFD;color:#3A2F8F;border-color:#C9C4F3;}
+.pers-inc{background:#E2F5EE;color:#0B5040;border-color:#9FE1CB;}
+.pers-note{font-size:10px;color:var(--i3);line-height:1.55;flex:1;margin-bottom:6px;}
+.pers-fit{font-size:9.5px;color:var(--i3);padding-top:6px;border-top:1px solid var(--ru);}
+.pers-fit strong{color:var(--i2);}
 
-/* 数据行 */
-.sm-row { transition: background .12s; }
-.sm-row-a { border-bottom: none !important; }
-.sm-row-b { border-bottom: 1px solid var(--ru); }
+/* ── Scenario Cards (S1 模块06) ── */
+.scene-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.scene-cat-card{background:var(--sf);border:1px solid var(--ru);border-radius:10px;overflow:hidden;}
+.scene-cat-hd{padding:10px 14px 9px;font-size:12px;font-weight:600;border-bottom:1px solid var(--ru);background:var(--bg);}
+.scene-cat-body{padding:10px 14px 12px;}
+.scene-list{list-style:none;display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.scene-list li{font-size:11px;color:var(--i2);padding-left:14px;position:relative;line-height:1.5;}
+.scene-list li::before{content:'·';position:absolute;left:4px;color:var(--i3);font-weight:700;}
+.scene-rep{font-size:9px;color:var(--i3);padding-top:6px;border-top:1px solid var(--ru);font-style:italic;line-height:1.5;}
 
-.sm-td-persona {
-  padding: 6px 14px 2px;
-  font-size: 10px;
-  color: var(--i3);
-  font-family: var(--mono);
-  white-space: nowrap;
-  border-right: 1px solid var(--ru);
-}
-.sm-td-scene {
-  padding: 2px 14px 7px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--ink);
-  white-space: nowrap;
-  border-right: 1px solid var(--ru);
-}
+/* ── Milestone HTML Timeline (S3 模块01) ── */
+.ms-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.ms-cols{display:flex;align-items:flex-start;position:relative;padding:16px 16px 0;}
+.ms-cols::before{content:'';position:absolute;top:25px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,transparent 0%,#CBC8C2 3%,#CBC8C2 97%,transparent 100%);pointer-events:none;z-index:0;}
+.ms-col{flex:0 0 150px;display:flex;flex-direction:column;align-items:center;padding:0 5px;}
+.ms-dot{width:14px;height:14px;border-radius:50%;border:2.5px solid var(--sf);position:relative;z-index:1;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,.1);}
+.ms-yr{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink);margin:5px 0 7px;}
+.ms-cards{width:100%;display:flex;flex-direction:column;gap:5px;}
+.ms-card{width:100%;background:var(--sf);border:1px solid var(--ru);border-left:3px solid;border-radius:0 7px 7px 0;padding:6px 8px;cursor:pointer;transition:box-shadow .15s,transform .15s;box-sizing:border-box;}
+.ms-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.1);transform:translateY(-1px);}
+.ms-card-on{background:#F7F5F1;box-shadow:0 2px 10px rgba(0,0,0,.1)!important;}
+.ms-tag{display:inline-block;font-size:9px;font-weight:500;padding:1px 5px;border-radius:6px;margin-bottom:3px;}
+.ms-ttl{font-size:10.5px;font-weight:600;color:var(--ink);line-height:1.4;}
+.ms-legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 16px 12px;font-size:10px;color:var(--i3);border-top:1px solid var(--ru);margin-top:6px;}
+.ms-leg-item{display:flex;align-items:center;gap:4px;}
+.ms-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
-/* 适配度色块单元格（rowspan=2）*/
-.sm-cell {
-  padding: 8px 10px;
-  text-align: center;
-  vertical-align: middle;
-  border-right: 1px solid var(--ru);
+/* ══════════════════════════════════════
+   SECTION 4 — 制作思路
+══════════════════════════════════════ */
+.vc-stats{display:flex;gap:0;border:1px solid var(--ru);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.vc-stat{flex:1;padding:16px 10px;text-align:center;border-right:1px solid var(--ru);}
+.vc-stat:last-child{border-right:none;}
+.vc-stat-n{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--ink);line-height:1;}
+.vc-stat-l{font-size:10px;color:var(--i3);margin-top:4px;line-height:1.4;}
+.vc-diagram{background:var(--sf);border:1px solid var(--ru);border-radius:12px;padding:20px 20px 16px;margin-bottom:12px;}
+.vc-layer-label{font-size:10px;font-weight:600;color:var(--i3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;}
+.vc-layer{display:flex;align-items:stretch;gap:8px;margin-bottom:4px;}
+.vc-tool{flex:1;background:var(--bg);border:1px solid var(--ru);border-top:3px solid;border-radius:8px;padding:11px 12px;min-width:0;}
+.vc-tool-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-bottom:6px;}
+.vc-tool-name{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.vc-tool-tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px;}
+.vc-tag{font-size:9px;font-weight:500;padding:2px 6px;border-radius:8px;}
+.vc-tool-desc{font-size:10px;color:var(--i3);line-height:1.55;}
+.vc-flow-arr{display:flex;align-items:center;font-size:16px;color:var(--r2);flex-shrink:0;padding:0 2px;}
+.vc-layer-conn{display:flex;align-items:center;gap:10px;margin:10px 0;padding:0 4px;}
+.vc-conn-line{flex:1;height:1px;background:var(--ru);}
+.vc-conn-label{font-size:9.5px;color:var(--i3);white-space:nowrap;background:var(--sf);padding:0 8px;}
+.mk-steps{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:8px;}
+.mk-step{background:var(--sf);border:1px solid var(--ru);border-radius:10px;padding:13px 14px;display:flex;gap:12px;align-items:flex-start;}
+.mk-num{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;flex-shrink:0;}
+.mk-body{flex:1;min-width:0;}
+.mk-phase{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.35;}
+.mk-list{list-style:none;display:flex;flex-direction:column;gap:3px;}
+.mk-list li{font-size:10.5px;color:var(--i2);line-height:1.5;padding-left:12px;position:relative;}
+.mk-list li::before{content:'·';position:absolute;left:2px;color:var(--i3);font-weight:700;}
+@media(max-width:900px){
+  .vc-stats{flex-wrap:wrap;}
+  .vc-stat{min-width:calc(33% - 1px);}
+  .vc-layer{flex-wrap:wrap;}
+  .vc-tool{flex:1 1 calc(50% - 20px);}
+  .vc-flow-arr{display:none;}
+  .mk-steps{grid-template-columns:1fr;}
 }
-.sm-cell:last-child { border-right: none; }
-.sm-dot {
-  width: 28px;
-  height: 28px;
-  border-radius: 5px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+@media(max-width:600px){.vc-stat{min-width:calc(50% - 1px);}}
